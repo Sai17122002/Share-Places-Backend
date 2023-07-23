@@ -48,8 +48,11 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
+  // .connect(
+  //   `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.ppnpqlm.mongodb.net/?retryWrites=true&w=majority`
+  // )
   .connect(
-    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.ppnpqlm.mongodb.net/?retryWrites=true&w=majority`
+    `mongodb+srv://saiaravind0611:ONkkaJcPtcMNNhRB@cluster0.ppnpqlm.mongodb.net/?retryWrites=true&w=majority`
   )
   .then(() => {
     app.listen(5000);
