@@ -1,4 +1,3 @@
-const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -20,15 +19,7 @@ const getUsers = async (req, res, next) => {
 };
 
 const signup = async (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return next(
-      new HttpError("Invalid inputs passed, please check your data.", 422)
-    );
-  }
-
-  const { name, email, password } = req.body;
-
+  const { name, email, password, image } = req.body;
   let existingUser;
   try {
     existingUser = await User.findOne({ email: email });
@@ -58,11 +49,11 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
-
+  console.log(image);
   const createdUser = new User({
     name,
     email,
-    image: req.file.path,
+    image,
     password: hashedPassword,
     places: [],
   });
@@ -93,7 +84,7 @@ const signup = async (req, res, next) => {
   }
 
   res
-    .status(201)
+    .status(200)
     .json({ userId: createdUser.id, email: createdUser.email, token: token });
 };
 
@@ -107,7 +98,7 @@ const login = async (req, res, next) => {
   } catch (err) {
     const error = new HttpError(
       "Logging in failed, please try again later.",
-      500
+      401
     );
     return next(error);
   }
@@ -144,7 +135,7 @@ const login = async (req, res, next) => {
     token = jwt.sign(
       { userId: existingUser.id, email: existingUser.email },
       process.env.JWT_KEY,
-      { expiresIn: "0.01h" }
+      { expiresIn: "1h" }
     );
   } catch (err) {
     const error = new HttpError(
