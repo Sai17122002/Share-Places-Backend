@@ -48,7 +48,7 @@ const getPlacesByUserId = async (req, res, next) => {
     return next(error);
   }
 
-  if (!userWithPlaces || userWithPlaces.places.length === 0) {
+  if (!userWithPlaces) {
     return next(
       new HttpError("Could not find places for the provided user id.", 404)
     );
@@ -62,7 +62,7 @@ const getPlacesByUserId = async (req, res, next) => {
 };
 
 const createPlace = async (req, res, next) => {
-  const { title, description, address, creator,image } = req.body;
+  const { title, description, address, creator, image } = req.body;
   let coordinates;
   try {
     coordinates = await getCoordsForAddress(address);

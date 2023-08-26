@@ -28,7 +28,13 @@ app.use((req, res, next) => {
 });
 
 app.get("/s3Url", async (req, res) => {
-  const url = await generateUploadURL();
+  let url;
+  try {
+    url = await generateUploadURL();
+  } catch (err) {
+    const error = new HttpError("Error from Amazon S3", 404);
+    throw error;
+  }
   res.json({ url });
 });
 

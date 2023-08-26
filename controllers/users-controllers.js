@@ -49,7 +49,7 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
-  console.log(image);
+
   const createdUser = new User({
     name,
     email,
@@ -57,7 +57,6 @@ const signup = async (req, res, next) => {
     password: hashedPassword,
     places: [],
   });
-
   try {
     await createdUser.save();
   } catch (err) {
@@ -106,9 +105,9 @@ const login = async (req, res, next) => {
   if (!existingUser) {
     const error = new HttpError(
       "Invalid credentials, could not log you in.",
-      401
+      500
     );
-    return next(error);
+    res.status(404).json("Invalid credentials, could not log you in");
   }
 
   let isValidPassword = false;
